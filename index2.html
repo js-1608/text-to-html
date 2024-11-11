@@ -129,21 +129,7 @@
   </script>
 
   <script>
-    function insertLink() {
-      var linkUrl = prompt("Enter the URL:", "https://");
-      if (linkUrl) {
-        var selectedText = window.getSelection().toString();
-        if (selectedText) {
-          // Insert the link around selected text
-          var anchorTag = `<a href="${linkUrl}" target="_blank">${selectedText}</a>`;
-          document.execCommand('insertHTML', false, anchorTag);
-        } else {
-          // If no text selected, insert an empty link
-          var anchorTag = `<a href="${linkUrl}" target="_blank">${linkUrl}</a>`;
-          document.execCommand('insertHTML', false, anchorTag);
-        }
-      }
-    }
+  
 
     function copyBodyContent() {
       // Get the inner HTML from the iframe's document (not the entire body)
@@ -156,20 +142,21 @@
     function insertLink() {
   var linkUrl = prompt("Enter the URL:", "https://");
   if (linkUrl) {
-    var selectedText = window.getSelection().toString();
     var iframeDocument = document.getElementById('richTextField').contentDocument;
+    var selectedText = iframeDocument.getSelection().toString();
 
     if (selectedText) {
-      // If there's selected text, insert the link around it
+      // If there's selected text, wrap it in an anchor tag
       var anchorTag = `<a href="${linkUrl}" target="_blank">${selectedText}</a>`;
       iframeDocument.execCommand('insertHTML', false, anchorTag);
     } else {
-      // If no text is selected, insert the link as plain text
+      // If no text is selected, insert the link text as the URL itself
       var anchorTag = `<a href="${linkUrl}" target="_blank">${linkUrl}</a>`;
       iframeDocument.execCommand('insertHTML', false, anchorTag);
     }
   }
 }
+
 
   </script>
 </body>
