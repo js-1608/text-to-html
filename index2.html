@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT AWESOME CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+    crossorigin="anonymous" />
+  <style>
+    .div-editor,
+    .iframe-editor {
+      width: 65%;
+      margin: auto;
+      display: block;
+      border: 1px solid #ccc;
+    }
+
+    .iframe-editor {
+      height: 600px;
+    }
+
+    .div-editor {
+      border: none;
+      margin-bottom: 10px;
+    }
+
+    .input-editor {
+      margin: 5px;
+    }
+  </style>
+  <title>Rich Text Editor using JavaScript - @code.scientist x @codingtorque</title>
+</head>
+
+<body>
+  <div class="div-editor">
+    <button onclick="Edit('bold')" title="bold"><i class="fa fa-bold"></i></button>
+    <button onclick="Edit('italic')" title="italic"><i class="fa fa-italic"></i></button>
+    <button onclick="Edit('underline')" title="underline"><i class="fa fa-underline"></i></button>
+    <button onclick="Edit('strikeThrough')" title="strikeThrough"><i class="fa fa-strikethrough"></i></button>
+    <button onclick="Edit('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
+    <button onclick="Edit('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
+    <button onclick="Edit('justifyFull')" title="justify"><i class="fa fa-align-justify"></i></button>
+    <button onclick="Edit('cut')" title="cut"><i class="fa fa-cut"></i></button>
+    <button onclick="Edit('copy')" title="Copy"><i class="fa fa-copy"></i></button>
+    <button onclick="Edit('indent')" title="text-indent"><i class="fa fa-indent"></i></button>
+    <button onclick="Edit('outdent')" title="text outdent"><i class="fa fa-outdent"></i></button>
+    <button onclick="Edit('subscript')" title="subscript"><i class="fa fa-subscript"></i></button>
+    <button onclick="Edit('superscript')" title="superscript"><i class="fa fa-superscript"></i></button>
+    <button onclick="Edit('undo')" title="undo"><i class="fa fa-undo"></i></button>
+    <button onclick="Edit('redo')" title="redo"><i class="fa fa-redo"></i></button>
+    <button onclick="Edit('insertUnorderedList')" title="unordered list"><i class="fa fa-list-ul"></i></button>
+    <button onclick="Edit('insertOrderedList')" title="ordered list"><i class="fa fa-list-ol"></i></button>
+    <button onclick="Edit('insertParagraph')"><i class="fa fa-paragraph"></i></button>
+    
+    <button onclick="insertLink()" title="Insert Link"><i class="fa fa-link"></i></button> <!-- Add Link Button -->
+    
+    <select onchange="execVal('formatBlock', this.value)">
+      <option value="p">p</option>
+      <option value="H1">H1</option>
+      <option value="H2">H2</option>
+      <option value="H3">H3</option>
+      <option value="H4">H4</option>
+      <option value="H5">H5</option>
+      <option value="H6">H6</option>
+      <option value="a">a</option>
+    </select>
+    <br>
+    <button onclick="Edit('insertHorizontalRule')" title="Insert Horizontal Rule">Insert Horizontal Rule</button>
+    <select onchange="execVal('fontName', this.value)">
+      <option value="Arial">Arial</option>
+      <option value="Comic Sans MS">Comic Sans MS</option>
+      <option value="Courier">Courier</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Tahoma">Tahoma</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Verdana">Verdana</option>
+    </select>
+    <select onchange="execVal('fontSize', this.value)" title="font size">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+    </select> Font Color
+    <input type="color" onchange="execVal('foreColor', this.value)" />
+    Highlight
+    <input type="color" onchange="execVal('hiliteColor', this.value)" class="input-editor" />
+    <button onclick="Edit('selectAll')">Apply</button>
+  </div>
+
+  <iframe class="iframe-editor" id="richTextField" srcdoc="<p>Type here...</p>"></iframe>
+  <button onclick="copyBodyContent()" style="top:0">Copy Body Content</button>
+
+  <div id="html"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#richTextField').on('load', function () {
+        this.contentDocument.designMode = "on";
+      });
+
+      // Function to enable edit mode on load
+      function enableEditMode() {
+        $('#richTextField').trigger('load');
+      }
+
+      function Edit(command) {
+        $('#richTextField')[0].contentDocument.execCommand(command, false, null);
+      }
+
+      function execVal(command, value) {
+        $('#richTextField')[0].contentDocument.execCommand(command, false, value);
+      }
+
+      // Expose to global scope
+      window.enableEditMode = enableEditMode;
+      window.Edit = Edit;
+      window.execVal = execVal;
+
+      // Call enableEditMode initially
+      enableEditMode();
+    });
+  </script>
+
+  <script>
+    function insertLink() {
+      var linkUrl = prompt("Enter the URL:", "https://");
+      if (linkUrl) {
+        var selectedText = window.getSelection().toString();
+        if (selectedText) {
+          // Insert the link around selected text
+          var anchorTag = `<a href="${linkUrl}" target="_blank">${selectedText}</a>`;
+          document.execCommand('insertHTML', false, anchorTag);
+        } else {
+          // If no text selected, insert an empty link
+          var anchorTag = `<a href="${linkUrl}" target="_blank">${linkUrl}</a>`;
+          document.execCommand('insertHTML', false, anchorTag);
+        }
+      }
+    }
+
+    function copyBodyContent() {
+      // Get the inner HTML from the iframe's document (not the entire body)
+      const iframeContent = document.getElementById('richTextField').contentDocument.body.innerHTML;
+      console.log(iframeContent);
+      // Set the inner HTML of the target div to the iframe content (keeping tags)
+      document.getElementById("html").innerText = iframeContent;
+    }
+
+    function insertLink() {
+  var linkUrl = prompt("Enter the URL:", "https://");
+  if (linkUrl) {
+    var selectedText = window.getSelection().toString();
+    var iframeDocument = document.getElementById('richTextField').contentDocument;
+
+    if (selectedText) {
+      // If there's selected text, insert the link around it
+      var anchorTag = `<a href="${linkUrl}" target="_blank">${selectedText}</a>`;
+      iframeDocument.execCommand('insertHTML', false, anchorTag);
+    } else {
+      // If no text is selected, insert the link as plain text
+      var anchorTag = `<a href="${linkUrl}" target="_blank">${linkUrl}</a>`;
+      iframeDocument.execCommand('insertHTML', false, anchorTag);
+    }
+  }
+}
+
+  </script>
+</body>
+
+</html>
