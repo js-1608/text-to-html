@@ -74,7 +74,7 @@
     </select>
     <br>
     <button onclick="Edit('insertHorizontalRule')" title="Insert Horizontal Rule">Insert Horizontal Rule</button>
-    <select onchange="execVal('fontName', this.value)">
+    <!-- <select onchange="execVal('fontName', this.value)">
       <option value="Arial">Arial</option>
       <option value="Comic Sans MS">Comic Sans MS</option>
       <option value="Courier">Courier</option>
@@ -82,8 +82,9 @@
       <option value="Tahoma">Tahoma</option>
       <option value="Times New Roman">Times New Roman</option>
       <option value="Verdana">Verdana</option>
-    </select>
+    </select> -->
     <select onchange="execVal('fontSize', this.value)" title="font size">
+      <option >select font</option>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -99,9 +100,9 @@
   </div>
 
   <iframe class="iframe-editor" id="richTextField" srcdoc="<p>Type here...</p>"></iframe>
-  <button onclick="copyBodyContent()" style="top:0">Copy Body Content</button>
+  <button onclick="copyBodyContent()" style="top:0;right:0" >Generate Html</button>
 
-  <div id="html"></div>
+  <div id="html" style="margin: auto; max-width: 1000px; border: 1px solid #ccc; margin-top:5%; padding:3%"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
